@@ -1,0 +1,44 @@
+const {
+    MessageEmbed
+  } = require('discord.js');
+  const ytdl = require("ytdl-core");
+  const search = require("yt-search");
+  
+  module.exports = {
+    name: "yt-search",
+    description: "plays a song (searched by name or url)", 
+    run: async (client, message, args, prefix, options) => {
+  
+      if(!message.member.voice.channel) return message.channel.send(`❌ | Please connect to a voice channel first!`);
+      if(message.guild.me.voice.channel) return message.channel.send("Ik ben al verbonden");
+      if(!args[0]) return message.channel.send(`❌ | You didn't define which song I have to play!`);
+        
+        search({query: `${args.join(" ")}`}, function (err, res) {
+        if(err) return message.channel.send(`❌ | ERROR: ${err}`);
+        
+        var videos = res.videos.slice(0, 10);
+        
+        var response = "";
+        
+        for(var vid in videos) {
+          response += `**[${parseInt(vid) + 1}]:** ${videos[vid].title} \r\n`;
+        }
+        
+        response += `✅ | Choose a number between \`1-${videos.length}\`!`;
+        
+        message.channel.send(response);
+        
+        const filter = music => !isNaN(parseInt(music.content)) && music.content < videos.length && music.content > 0;
+                                       
+        const collection = message.channel.createMessageCollector(filter);
+        
+        collection.videos = videos;
+        
+        collection.once("collect", function (music) {
+          var commandFile = require("./test.js");
+          
+          commandFile.run(client, message, this.videos[parseInt(music.content) - 1].url, options)
+        });
+      });
+    }
+  }

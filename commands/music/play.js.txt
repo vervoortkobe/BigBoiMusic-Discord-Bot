@@ -1,0 +1,38 @@
+const {
+    MessageEmbed
+  } = require('discord.js');
+  const ytdl = require("ytdl-core");
+  const search = require("yt-search");
+  
+  module.exports = {
+    name: "play",
+    description: "plays a song (searched by name or url)", 
+    run: async (client, message, args, prefix) => {
+  
+      if(!message.member.voice.channel) return message.channel.send(`❌ | Please connect to a voice channel first!`);
+      if(message.guild.me.voice.channel) return message.channel.send("Ik ben al verbonden");
+      if(!args[0]) return message.channel.send(`❌ | You didn't define which song I have to play!`);
+      
+      var validate = await ytdl.validateURL(args[0]);
+      if(!validate) return message.channel.send(":x: | Thats not a valid youtube/stream url");
+
+      var connection = message.member.voice.channel.join().then(vc => {
+
+      var stream = ytdl(args[0], { filter: "audioonly" });
+
+      var options = {seek: 3, volume:1};
+
+      var dispatcher = vc.play(stream, options);
+
+      });
+
+      const trapfmEmbed = new MessageEmbed()
+      .setColor(0xff0000)
+      .setTitle(`:white_check_mark::headphones: | Now streaming TrapFM!`)
+      .setDescription(`Streaming in ${message.member.voice.channel}${client.ws.ping}`)
+      .setFooter(`© ${client.user.username} was made by Tsunami#6271`)
+      .setTimestamp()
+      message.channel.send(trapfmEmbed);
+      
+     }
+  }

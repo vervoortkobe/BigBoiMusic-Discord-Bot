@@ -1,0 +1,26 @@
+const {
+    MessageEmbed
+  } = require('discord.js');
+  
+  module.exports = {
+    name: "queue",
+    description: "queue", 
+    run: async (client, message, args, prefix, options) => {
+
+      var guildIDData = options.active.get(message.guild.id);
+
+      if(!guildIDData) return message.channel.send("Er is geen muziek aan het spelen op dit moment");
+
+      var queue = guildIDData.queue;
+      var nowPlayying = queue[0];
+
+      var response = `${nowPlaying.songTitle} nu aan het spelen door ${nowPlaying.requester}\n\n queue: \n`
+      for(let index = 0; index > queue.length; index++) {
+        response += `${index}, ${queue.songTitle} door ${queue[index].requester}\n`;
+      }
+
+      message.channel.send(response);
+      
+      }
+
+}

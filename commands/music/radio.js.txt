@@ -1,0 +1,80 @@
+const { MessageEmbed } = require("discord.js");
+const stations = [
+  "https://iceant.antfarm.co.za:8443/mmradio_64.m4a",
+  "http://stream.radiocorp.nl/web10_mp3",
+  "https://kexp-mp3-128.streamguys1.com/kexp128.mp3",
+  "https://as-dash-ww-live.bbcfmt.hs.llnwd.net/pool_904/live/ww/bbc_6music/bbc_6music.isml/dash/bbc_6music-audio=96000-248114119.m4s",
+
+];
+
+module.exports = {
+  name: "radio",
+  description: "streams radio",
+  run: async (client, message, args, prefix) => {
+
+    if(!args[0]) return message.channel.send(`:x: Usage: m.radio <radio station>\nTo get a list of all available radio stations, do m.rlist.`);
+    
+    if (!message.member.voiceChannel)
+      return message.channel.send(
+        `❌ | Please connect to a voice channel first!`
+      );
+    
+    if (!message.guild.voiceConnection) {
+      var station;
+      var stationName;
+
+      switch (args[0].toLowerCase()) {
+        case "mannmaderadio":
+          station = stations[0];
+          stationName = "MannMadeRadio";
+          break;
+
+        case "slamfm":
+          station = stations[1];
+          stationName = "SlamFM";
+          break;
+
+        case "kexp":
+          station = stations[2];
+          stationName = "KEXP";
+          break;
+        case "radio6":
+          station = stations[3];
+          stationName = "Radio 6";
+          break;
+        
+        /*
+        case "radio6":
+          station = stations[3];
+          stationName = "Radio 6";
+          break;
+          */
+          
+        //copy a case
+
+        default:
+          station = stations[1];
+          stationName = "SlamFM";
+          break;
+      }
+
+      let connection = await message.member.voiceChannel.join();
+
+      let dispatcher = await connection.playStream(station, {
+        filter: "audioonly"
+      });
+
+      message.channel.send(
+        `:white_check_mark: | Now streaming ${stationName} | Requested by ${message.author.username}`
+      );
+      
+    } else {
+      
+      message.channel.send(`:x: | I'm already streaming radio in ${message.member.voiceChannel}!`);
+      
+    }
+  }
+};
+
+//https://iceant.antfarm.co.za:8443/mmradio_64.m4a
+//http://stream.radiocorp.nl/web10_mp3

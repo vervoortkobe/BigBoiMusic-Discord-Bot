@@ -1,0 +1,33 @@
+  const {
+    MessageEmbed
+  } = require('discord.js');
+  
+  module.exports = {
+    name: "trapfm",
+    description: "trapfm", 
+    run: async (client, message, args, prefix) => {
+
+    if(!message.member.voice.channel) return message.channel.send(`❌ | Please connect to a voice channel first!`);
+    
+    if (!message.guild.voiceConnection) {
+
+      let connection = await message.member.voice.channel.join();
+
+      let dispatcher = await connection.play("http://stream.trap.fm:6002/", { filter: "audioonly" });
+
+      const trapfmEmbed = new MessageEmbed()
+      .setColor(0xff0000)
+      .setTitle(`:white_check_mark::headphones: | Now streaming TrapFM!`)
+      .setDescription(`Streaming in ${message.member.voice.channel}\nYou can get a live playlist [here](http://trap.fm/tracklist/)!`)
+      .setFooter(`© ${client.user.username} was made by Tsunami#6271`)
+      .setTimestamp()
+      message.channel.send(trapfmEmbed);
+      
+    } else {
+      
+      message.channel.send(`:x: | I'm already streaming radio!`);
+      
+     }
+  }
+
+}

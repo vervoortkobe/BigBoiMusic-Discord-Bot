@@ -1,0 +1,13 @@
+const {
+    MessageEmbed
+  } = require('discord.js');
+  
+  module.exports = {
+    name: "rlist",
+    description: "lists radio channels",
+    run: async (client, message, args, prefix) => {
+      
+      return message.channel.send(`Here is the list of supproted radio stations:\n1. SlamFM\n2. MannMadeRadio\n3. KEXP\n4. Radio 6`);
+    }
+
+}

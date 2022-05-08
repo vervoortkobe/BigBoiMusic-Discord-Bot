@@ -1,0 +1,23 @@
+const {
+    MessageEmbed
+  } = require('discord.js');
+  
+  module.exports = {
+    name: "pause",
+    description: "pause", 
+    run: async (client, message, args, prefix, options) => {
+
+      var guildIDData = options.active.get(message.guild.id);
+
+      if(!guildIDData) return message.channel.send("geen muziek aan hetspelen op dit moment");
+      if(message.member.voice.channel != message.guild.me.voice.channel) return message.channel.send("We zitten niet in hetzelfde kanaal");
+
+      if(guildIDData.dispatcher.paused) return message.channel.send("De muziek is al gepauzeerd");
+
+      guildIDData.dispatcher.pause();
+
+      return message.channel.send("De muziek is gepauzeerd");
+      
+      }
+
+}
