@@ -57,7 +57,7 @@ client.on("channelCreate", channel => {
 });
 
 client.on("message", async message => {
-  const prefix = process.env.PREFIX;
+  const prefix = "m.";
 
   if (message.author.bot) return;
   if (!message.guild) return;
